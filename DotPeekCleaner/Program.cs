@@ -59,7 +59,10 @@ namespace DotPeekCleaner
 
         static void ProcessFile(string path)
         {
-            string[] lines = File.ReadAllLines(path).SkipWhile(line => line.TrimStart().StartsWith("//") || string.IsNullOrWhiteSpace(line)).ToArray();
+            string[] lines = File.ReadAllLines(path)
+                .Select(line => line.TrimEnd()) // Entfernt abschließende Leerzeichen
+                .SkipWhile(line => line.TrimStart().StartsWith("//") || string.IsNullOrWhiteSpace(line))
+                .ToArray();
 
             //if (lines.Length > 0 && string.IsNullOrWhiteSpace(lines[^1]))
             //{
@@ -67,16 +70,31 @@ namespace DotPeekCleaner
             //}
 
             int count = 0;
-            for (int i = lines.Length -1; i >= 0; i--)
+            for (int i = lines.Length - 1; i >= 0; i--)
             {
                 if (string.IsNullOrWhiteSpace(lines[i]))
                 {
                     count++;
                 }
+                else
+                {
+                    break; // Sobald eine nicht-leere Zeile gefunden wird, die Schleife beenden
+                }
             }
             Array.Resize(ref lines, lines.Length - count);
 
-            File.WriteAllLines(path, lines);
+            // Entfernen von führenden und abschließenden Leerzeichen aus den Zeilen
+            //for (int i = 0; i < lines.Length; i++)
+            //{
+            //    lines[i] = lines[i].TrimEnd();
+            //}
+
+            lines = lines.Select(line => line.TrimEnd()).ToArray();
+
+            string text = string.Join(Environment.NewLine, lines);
+
+            //File.WriteAllLines(path, lines);
+            File.WriteAllText(path, text);
         }
 
         static void WriteErrorLine(string message, bool writeErrorPreMessage = false)
