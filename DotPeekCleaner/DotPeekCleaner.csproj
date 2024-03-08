@@ -5,6 +5,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>$(AssemblyName)</Title>
+    <Authors>Maurice Preiß</Authors>
   </PropertyGroup>
 
 </Project>

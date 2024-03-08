@@ -1,12 +1,19 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace DotPeekCleaner
 {
     internal class Program
     {
+        private static string? _fullPath;
+
         static void Main()
         {
-            Console.Write("Please insert the folder path of your C# project: ");
+            Console.BackgroundColor = ConsoleColor.Black;
+            WriteHeader();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write("\n Please insert the folder path of your C# project: ");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             string path = Console.ReadLine()!;
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -22,18 +29,34 @@ namespace DotPeekCleaner
                 return;
             }
 
-            //if (Directory.GetFiles(path, "*.sln", SearchOption.TopDirectoryOnly).Length <= 0)
-            //{
-            //    WriteErrorLine("This is not a valid C# project folder.");
-            //    Reset();
-            //    return;
-            //}
+            _fullPath = path;
 
             ProcessFiles(path);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Finished.");
+            Console.WriteLine(" Finished.");
             Console.ReadKey();
             Process.Start("explorer.exe", path);
+        }
+
+        static void WriteHeader()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            string text =
+                "\r\n ██████╗░░█████╗░████████╗██████╗░███████╗███████╗██╗░░██╗   ░█████╗░██╗░░░░░███████╗░█████╗░███╗░░██╗███████╗██████╗░" +
+                "\r\n ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██╔════╝██║░██╔╝   ██╔══██╗██║░░░░░██╔════╝██╔══██╗████╗░██║██╔════╝██╔══██╗" +
+                "\r\n ██║░░██║██║░░██║░░░██║░░░██████╔╝█████╗░░█████╗░░█████═╝░   ██║░░╚═╝██║░░░░░█████╗░░███████║██╔██╗██║█████╗░░██████╔╝" +
+                "\r\n ██║░░██║██║░░██║░░░██║░░░██╔═══╝░██╔══╝░░██╔══╝░░██╔═██╗░   ██║░░██╗██║░░░░░██╔══╝░░██╔══██║██║╚████║██╔══╝░░██╔══██╗" +
+                "\r\n ██████╔╝╚█████╔╝░░░██║░░░██║░░░░░███████╗███████╗██║░╚██╗   ╚█████╔╝███████╗███████╗██║░░██║██║░╚███║███████╗██║░░██║" +
+                "\r\n ╚═════╝░░╚════╝░░░░╚═╝░░░╚═╝░░░░░╚══════╝╚══════╝╚═╝░░╚═╝   ░╚════╝░╚══════╝╚══════╝╚═╝░░╚═╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝";
+
+            Console.WriteLine(text);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n Author: Maurice Preiß");
+            Console.WriteLine(" Version: " + Assembly.GetExecutingAssembly().GetName().Version);
+            Console.Write(" Github-Repo: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("https://www.github.com/mauricepreiss/DotPeekCleaner");
+            Console.ResetColor();
         }
 
         static void Reset()
@@ -60,14 +83,9 @@ namespace DotPeekCleaner
         static void ProcessFile(string path)
         {
             string[] lines = File.ReadAllLines(path)
-                .Select(line => line.TrimEnd()) // Entfernt abschließende Leerzeichen
+                .Select(line => line.TrimEnd()) // removes trailing whitespaces
                 .SkipWhile(line => line.TrimStart().StartsWith("//") || string.IsNullOrWhiteSpace(line))
                 .ToArray();
-
-            //if (lines.Length > 0 && string.IsNullOrWhiteSpace(lines[^1]))
-            //{
-            //    lines = lines.Take(lines.Length - 1).ToArray();
-            //}
 
             int count = 0;
             for (int i = lines.Length - 1; i >= 0; i--)
@@ -78,23 +96,18 @@ namespace DotPeekCleaner
                 }
                 else
                 {
-                    break; // Sobald eine nicht-leere Zeile gefunden wird, die Schleife beenden
+                    break; // end loop when non-empty line was found
                 }
             }
+
             Array.Resize(ref lines, lines.Length - count);
 
-            // Entfernen von führenden und abschließenden Leerzeichen aus den Zeilen
-            //for (int i = 0; i < lines.Length; i++)
-            //{
-            //    lines[i] = lines[i].TrimEnd();
-            //}
-
             lines = lines.Select(line => line.TrimEnd()).ToArray();
-
             string text = string.Join(Environment.NewLine, lines);
-
-            //File.WriteAllLines(path, lines);
             File.WriteAllText(path, text);
+
+            path = path.Replace(_fullPath!, "...");
+            WriteInfoLine("Processed file: " + path);
         }
 
         static void WriteErrorLine(string message, bool writeErrorPreMessage = false)
@@ -108,9 +121,17 @@ namespace DotPeekCleaner
             }
 
             consoleMessage += message;
-            Console.WriteLine(consoleMessage);
+            Console.WriteLine(" " + consoleMessage);
             Console.ForegroundColor = colorBefore;
             Console.ReadKey();
+        }
+
+        static void WriteInfoLine(string message)
+        {
+            var colorBefore = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(" [INFO]: " + message);
+            Console.ForegroundColor = colorBefore;
         }
     }
 }
