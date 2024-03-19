@@ -20,15 +20,15 @@ Example.:
 ## Usage
 1. Open the *DotPeekCleaner.exe*. It should look like that:
 
-![UI Image 1](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/DotPeekCleaner-screenshot.png)
+![UI Image 1](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/dotPeekCleaner-screenshot.png)
 
 2. Paste the path of the folder where the *.csproj* file is located:
 
-![UI Image 1](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/DotPeekCleaner-screenshot2.png)
+![UI Image 2](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/dotPeekCleaner-screenshot2.png)
 
 3. After all files are processed, it should look like this:
 
-![UI Image 1](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/DotPeekCleaner-screenshot3.png)
+![UI Image 3](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/dotPeekCleaner-screenshot.png)
 
 ## Code Example
 Here is the internal used code for cleaning the C# project's *.cs* files:
