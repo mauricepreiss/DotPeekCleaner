@@ -40,6 +40,8 @@ namespace DotPeekCleaner
 
         static void WriteHeader()
         {
+            Console.Title = Assembly.GetExecutingAssembly().GetName().Name!;
+
             Console.ForegroundColor = ConsoleColor.Red;
             string text =
                 "\r\n ██████╗░░█████╗░████████╗██████╗░███████╗███████╗██╗░░██╗   ░█████╗░██╗░░░░░███████╗░█████╗░███╗░░██╗███████╗██████╗░" +
@@ -73,11 +75,11 @@ namespace DotPeekCleaner
                 ProcessFile(fileName);
             }
 
-            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-            foreach (string subdirectory in subdirectoryEntries)
-            {
-                ProcessFiles(subdirectory);
-            }
+            //string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            //foreach (string subdirectory in subdirectoryEntries)
+            //{
+            //    ProcessFiles(subdirectory);
+            //}
         }
 
         static void ProcessFile(string path)
