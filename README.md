@@ -28,7 +28,7 @@ Example.:
 
 3. After all files are processed, it should look like this:
 
-![UI Image 3](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/dotPeekCleaner-screenshot.png)
+![UI Image 3](https://raw.githubusercontent.com/mauricepreiss/mauricepreiss/main/dotPeekCleaner-screenshot3.png)
 
 ## Code Example
 Here is the internal used code for cleaning the C# project's *.cs* files:
